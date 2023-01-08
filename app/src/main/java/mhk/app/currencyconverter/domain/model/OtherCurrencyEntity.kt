@@ -1,7 +1,6 @@
 package mhk.app.currencyconverter.domain.model
 
-data class CurrencyEntity(
+data class OtherCurrencyEntity(
     val symbol: String,
-    val name: String,
-
+    val rate: String
 )

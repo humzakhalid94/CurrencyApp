@@ -115,9 +115,12 @@ class HomeViewModel @Inject constructor(
         return true
     }
 
-    fun setFromCurrency(value: String) {
+    fun setFromCurrency(value: String?) {
         selectedFrom.value = value
     }
+
+    fun isFromSelected() = selectedFrom.value != null
+
 
     fun swapCurrency() {
         val from = selectedFrom.value

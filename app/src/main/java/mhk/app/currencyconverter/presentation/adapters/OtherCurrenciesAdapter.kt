@@ -4,13 +4,11 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import mhk.app.currencyconverter.databinding.ItemOtherCurrencyBinding
-import mhk.app.currencyconverter.databinding.ItemRecordsBinding
-import mhk.app.currencyconverter.domain.model.RecordEntity
-import mhk.app.currencyconverter.presentation.extension.formatted
+import mhk.app.currencyconverter.domain.model.OtherCurrencyEntity
 
-class OtherCurrenciesAdapter (private val records: MutableList<RecordEntity>) : RecyclerView.Adapter<OtherCurrenciesAdapter.ViewHolder>() {
+class OtherCurrenciesAdapter (private val records: MutableList<OtherCurrencyEntity>) : RecyclerView.Adapter<OtherCurrenciesAdapter.ViewHolder>() {
     interface Listener {
-        fun onTap(item: RecordEntity)
+        fun onTap(item: OtherCurrencyEntity)
     }
 
     private var listener: Listener? = null
@@ -21,7 +19,7 @@ class OtherCurrenciesAdapter (private val records: MutableList<RecordEntity>) : 
     }
 
 
-    fun updateList(list: List<RecordEntity>){
+    fun updateList(list: List<OtherCurrencyEntity>){
         records.clear()
         records.addAll(list)
         notifyDataSetChanged()
@@ -30,9 +28,9 @@ class OtherCurrenciesAdapter (private val records: MutableList<RecordEntity>) : 
 
 
     inner class ViewHolder(private val itemBinding: ItemOtherCurrencyBinding) : RecyclerView.ViewHolder(itemBinding.root){
-        fun bind(item: RecordEntity){
-            itemBinding.tvSymbol.text = "${item.from} - ${item.to}"
-            itemBinding.tvRate.text = item.date.formatted()
+        fun bind(item: OtherCurrencyEntity){
+            itemBinding.tvSymbol.text = item.symbol
+            itemBinding.tvRate.text = item.rate
         }
     }
 

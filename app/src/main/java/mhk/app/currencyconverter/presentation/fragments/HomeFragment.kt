@@ -49,18 +49,26 @@ class HomeFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         binding.btnDetail.setOnClickListener {
-            findNavController().navigate(R.id.action_homeFragment_to_detailFragment)
+            if (!viewModel.isFromSelected()) {
+                requireActivity().showToast("Select from currency")
+                return@setOnClickListener
+            }
+
+            val bundle = Bundle().apply {
+                putParcelable("baseCurrency", viewModel.mBaseCurrency.value)
+            }
+            findNavController().navigate(R.id.action_homeFragment_to_detailFragment, bundle)
+            viewModel.setFromCurrency(null)
         }
 
         binding.btnSwap.setOnClickListener {
 
             if (!viewModel.validateCurrencyFields()) {
                 requireActivity().showToast("Select both currencies to swap")
-
                 return@setOnClickListener
             }
 
-            val from = viewModel.selectedFrom?.value
+            val from = viewModel.selectedFrom.value
             val to = viewModel.selectedTo
 
             binding.tvFromCountry.text = to

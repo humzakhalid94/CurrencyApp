@@ -15,10 +15,22 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/clBottom"
-        app:layout_constraintTop_toTopOf="@+id/guideline4"
-        app:layout_constraintBottom_toBottomOf="parent"
         android:layout_width="match_parent"
-        android:layout_height="0dp">
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/guideline4">
+
+        <TextView
+            android:id="@+id/tvHistoric"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/historical_data"
+            android:textColor="@color/black"
+            android:textSize="16sp"
+            android:layout_marginHorizontal="4dp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rvRecords"
@@ -27,10 +39,21 @@
             android:layout_marginHorizontal="4dp"
             android:layout_marginVertical="8dp"
             app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/rvOtherCurrencies"
+            app:layout_constraintHorizontal_weight="5"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintHorizontal_weight="6"
-            app:layout_constraintEnd_toStartOf="@+id/rvOtherCurrencies"/>
+            app:layout_constraintTop_toBottomOf="@+id/tvHistoric" />
+
+        <TextView
+            android:id="@+id/tvOtherCurrencies"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/other_currencies"
+            android:textColor="@color/black"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="@+id/rvOtherCurrencies"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rvOtherCurrencies"
@@ -40,14 +63,11 @@
             android:layout_marginVertical="8dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintHorizontal_weight="4"
+            app:layout_constraintHorizontal_weight="5"
             app:layout_constraintStart_toEndOf="@+id/rvRecords"
-            />
-
+            app:layout_constraintTop_toBottomOf="@+id/tvOtherCurrencies" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
-
 
 
     <ProgressBar

@@ -61,8 +61,9 @@ class CurrencyRepositoryImpl @Inject constructor(
             if (response.isSuccessful) {
                 val body = response.body()!!
                 val data = body.rates
-//
-                val baseCurrency = BaseCurrencyEntity(rates = data)
+                val base = body.base
+
+                val baseCurrency = BaseCurrencyEntity(base = base, rates = data)
                 emit(BaseResult.Success(baseCurrency))
             } else {
                 val type = object : TypeToken<BaseCurrencyDTO>(){}.type

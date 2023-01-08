@@ -4,4 +4,6 @@
     <string name="to">To</string>
     <string name="select_from">Select From</string>
     <string name="select_to">Select To</string>
+    <string name="historical_data">Historical Data</string>
+    <string name="other_currencies">Other Currencies</string>
 </resources>

@@ -1,5 +1,10 @@
 package mhk.app.currencyconverter.domain.model
 
+import android.os.Parcelable
+import kotlinx.parcelize.Parcelize
+
+@Parcelize
 data class BaseCurrencyEntity(
-    val rates: HashMap<String, String> = hashMapOf<String, String>()
-)
+    val base: String = "",
+    val rates: LinkedHashMap<String, String> = linkedMapOf<String, String>()
+) : Parcelable
