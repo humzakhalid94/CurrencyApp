@@ -10,12 +10,15 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
+import androidx.recyclerview.widget.LinearLayoutManager
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import mhk.app.currencyconverter.R
 import mhk.app.currencyconverter.databinding.FragmentDetailBinding
 import mhk.app.currencyconverter.databinding.FragmentHomeBinding
+import mhk.app.currencyconverter.domain.model.RecordEntity
+import mhk.app.currencyconverter.presentation.adapters.RecordAdapter
 import mhk.app.currencyconverter.presentation.extension.gone
 import mhk.app.currencyconverter.presentation.extension.showToast
 import mhk.app.currencyconverter.presentation.extension.visible
@@ -43,14 +46,30 @@ class DetailFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         viewModel.fetchRecords()
 
+        setUpRecyclerView()
         setUpObservers()
+    }
+
+    fun setUpRecyclerView() {
+        val a = RecordAdapter(mutableListOf())
+        a.setOnTapListener(object: RecordAdapter.Listener{
+            override fun onTap(item: RecordEntity) {
+                println(item.date)
+            }
+        })
+
+        binding.rvRecords.apply {
+            adapter = a
+            layoutManager = LinearLayoutManager(requireActivity())
+        }
     }
 
     fun setUpObservers() {
         viewModel.records
             .flowWithLifecycle(viewLifecycleOwner.lifecycle, Lifecycle.State.STARTED)
-            .onEach { currency ->
+            .onEach { records ->
                 Log.d("Records", "Content")
+                handleRecords(records)
             }
             .launchIn(viewLifecycleOwner.lifecycleScope)
 
@@ -64,7 +83,13 @@ class DetailFragment : Fragment() {
     }
 
 
-
+    private fun handleRecords(records: List<RecordEntity>){
+        binding.rvRecords.adapter?.let { adapter ->
+            if(adapter is RecordAdapter){
+                adapter.updateList(records)
+            }
+        }
+    }
 
     private fun handleState(state: DetailFragmentState){
         when(state){
