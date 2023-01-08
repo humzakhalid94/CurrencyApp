@@ -1,22 +1,29 @@
-package mhk.app.currencyconverter.data.repository
+package mhk.app.currencyconverter.data.remote.repository
 
-import com.example.anime.data.data_source.dto.CurrencyInstanceAPI
+import mhk.app.currencyconverter.data.remote.CurrencyInstanceAPI
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
-import mhk.app.currencyconverter.data.data_source.dto.BaseCurrencyDTO
-import mhk.app.currencyconverter.data.data_source.dto.CurrencyDTO
-import mhk.app.currencyconverter.data.data_source.dto.CurrencyGenericDTO
-import mhk.app.currencyconverter.data.data_source.dto.Rates
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.withContext
+import mhk.app.currencyconverter.data.local.CurrencyDao
+import mhk.app.currencyconverter.data.remote.data_source.dto.BaseCurrencyDTO
+import mhk.app.currencyconverter.data.remote.data_source.dto.CurrencyDTO
 import mhk.app.currencyconverter.domain.common.base.BaseResult
+import mhk.app.currencyconverter.domain.common.base.Failure
 import mhk.app.currencyconverter.domain.model.BaseCurrencyEntity
 import mhk.app.currencyconverter.domain.model.CurrencyEntity
+import mhk.app.currencyconverter.domain.model.RecordEntity
 import mhk.app.currencyconverter.domain.repository.CurrencyRepository
 import javax.inject.Inject
 
-class CurrencyRepositoryImpl @Inject constructor(private val currencyApi: CurrencyInstanceAPI) :
-    CurrencyRepository {
+class CurrencyRepositoryImpl @Inject constructor(
+    private val currencyApi: CurrencyInstanceAPI,
+    private val currencyDao: CurrencyDao
+
+) : CurrencyRepository {
 
 
     override suspend fun getCurrencyList(): Flow<BaseResult<List<CurrencyEntity>, CurrencyDTO>> {
@@ -67,4 +74,20 @@ class CurrencyRepositoryImpl @Inject constructor(private val currencyApi: Curren
     }
 
 
+    override suspend  fun saveRecord(record: RecordEntity) {
+        withContext(Dispatchers.IO) {
+            currencyDao.insert(record)
+        }
+    }
+
+
+    override suspend fun findLast3Days(): Flow<BaseResult<List<RecordEntity>, Failure>> {
+        return flow {
+                val localTodos = currencyDao.findLast3Days()
+                emit(BaseResult.Success(localTodos))
+        }
+    }
+
+
 }
+

@@ -98,6 +98,8 @@
         android:ems="10"
         android:inputType="number"
         android:minHeight="48dp"
+        android:focusable="false"
+        android:focusableInTouchMode="false"
         android:paddingHorizontal="6dp"
         app:layout_constraintBottom_toBottomOf="@+id/etFrom"
         app:layout_constraintEnd_toEndOf="parent"

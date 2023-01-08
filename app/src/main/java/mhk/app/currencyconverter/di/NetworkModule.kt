@@ -1,16 +1,15 @@
 package mhk.app.currencyconverter.di
 
-import android.content.Context
-import com.example.anime.data.data_source.dto.CurrencyInstanceAPI
+import mhk.app.currencyconverter.data.remote.CurrencyInstanceAPI
 import com.google.gson.Gson
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
-import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import mhk.app.currencyconverter.common.Constants
 import mhk.app.currencyconverter.data.common.RequestInterceptor
-import mhk.app.currencyconverter.data.repository.CurrencyRepositoryImpl
+import mhk.app.currencyconverter.data.local.CurrencyDao
+import mhk.app.currencyconverter.data.remote.repository.CurrencyRepositoryImpl
 import mhk.app.currencyconverter.domain.repository.CurrencyRepository
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
@@ -56,7 +55,7 @@ object NetworkModule {
 
     @Singleton
     @Provides
-    fun provideCurrencyRepository(repo: CurrencyInstanceAPI) : CurrencyRepository {
-        return CurrencyRepositoryImpl(repo)
+    fun provideCurrencyRepository(repo: CurrencyInstanceAPI, currencyDao: CurrencyDao) : CurrencyRepository {
+        return CurrencyRepositoryImpl(repo, currencyDao)
     }
 }

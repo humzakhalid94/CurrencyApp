@@ -79,6 +79,10 @@ dependencies {
     implementation "androidx.navigation:navigation-fragment-ktx:$navigationComponent"
     implementation "androidx.navigation:navigation-ui-ktx:$navigationComponent"
 
+    //room db
+    def room_db_version = "2.3.0"
+    implementation "androidx.room:room-runtime:$room_db_version"
+    kapt "androidx.room:room-compiler:$room_db_version"
 
     testImplementation 'junit:junit:4.+'
     androidTestImplementation 'androidx.test.ext:junit:1.1.4'

@@ -75,8 +75,11 @@ class HomeFragment : Fragment() {
             MaterialAlertDialogBuilder(requireActivity())
                 .setTitle(resources.getString(R.string.select_from))
                 .setItems(currencies) { dialog, which ->
-                    viewModel.selectedFrom?.value = currencies.get(which)
-                    binding.tvFromCountry.text = viewModel.selectedFrom?.value
+//                    viewModel.selectedFrom.value = currencies.get(which)
+                    viewModel.setFromCurrency(currencies.get(which))
+                    binding.tvFromCountry.text = viewModel.selectedFrom.value
+
+                    viewModel.saveRecord()
                 }
                 .show()
         }
@@ -88,6 +91,8 @@ class HomeFragment : Fragment() {
                 .setItems(currencies) { dialog, which ->
                     viewModel.selectedTo = currencies.get(which)
                     binding.tvToCountry.text = viewModel.selectedTo
+
+                    viewModel.saveRecord()
                 }
                 .show()
         }

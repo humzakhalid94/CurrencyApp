@@ -1,4 +1,4 @@
-package mhk.app.currencyconverter.data.data_source.dto
+package mhk.app.currencyconverter.data.remote.data_source.dto
 
 data class CurrencyDTO(
     val symbols: LinkedHashMap<String, String>,

@@ -10,15 +10,19 @@ import kotlinx.coroutines.launch
 import mhk.app.currencyconverter.domain.common.base.BaseResult
 import mhk.app.currencyconverter.domain.model.BaseCurrencyEntity
 import mhk.app.currencyconverter.domain.model.CurrencyEntity
+import mhk.app.currencyconverter.domain.model.RecordEntity
 import mhk.app.currencyconverter.domain.repository.CurrencyRepository
 import mhk.app.currencyconverter.domain.use_case.GetBaseCurrencyUseCase
 import mhk.app.currencyconverter.domain.use_case.GetCurrenciesUseCase
+import mhk.app.currencyconverter.domain.use_case.SaveRecordUseCase
 import javax.inject.Inject
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
     val currencyUseCase: GetCurrenciesUseCase,
-    val baseCurrencyUseCase: GetBaseCurrencyUseCase
+    val baseCurrencyUseCase: GetBaseCurrencyUseCase,
+
+    val saveRecordUseCase: SaveRecordUseCase
 ) : ViewModel() {
 
     private val state = MutableStateFlow<HomeMainFragmentState>(HomeMainFragmentState.Init)
@@ -94,9 +98,9 @@ class HomeViewModel @Inject constructor(
     }
 
     fun getToCurrencies(): Array<String> {
-        selectedFrom?.value?.let {
+        selectedFrom.value?.let {
             return allCurrenySymbols.filter {
-                it != selectedFrom!!.value
+                it != selectedFrom.value
             }.toTypedArray()
 
         } ?: kotlin.run {
@@ -162,6 +166,15 @@ class HomeViewModel @Inject constructor(
     fun performConversion(amount: Int) {
         val difference = getToCurrencyValue()
         conversionAmount.value = amount * difference
+    }
+
+    fun saveRecord() = viewModelScope.launch {
+        if (!validateCurrencyFields()) { return@launch }
+
+        val from = selectedFrom.value!!
+        val to = selectedTo!!
+
+        saveRecordUseCase.invoke(RecordEntity(from = from, to = to))
     }
 
 }
