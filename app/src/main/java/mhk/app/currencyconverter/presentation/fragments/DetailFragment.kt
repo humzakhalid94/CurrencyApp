@@ -18,6 +18,7 @@ import mhk.app.currencyconverter.R
 import mhk.app.currencyconverter.databinding.FragmentDetailBinding
 import mhk.app.currencyconverter.databinding.FragmentHomeBinding
 import mhk.app.currencyconverter.domain.model.RecordEntity
+import mhk.app.currencyconverter.presentation.adapters.OtherCurrenciesAdapter
 import mhk.app.currencyconverter.presentation.adapters.RecordAdapter
 import mhk.app.currencyconverter.presentation.extension.gone
 import mhk.app.currencyconverter.presentation.extension.showToast
@@ -51,17 +52,24 @@ class DetailFragment : Fragment() {
     }
 
     fun setUpRecyclerView() {
-        val a = RecordAdapter(mutableListOf())
-        a.setOnTapListener(object: RecordAdapter.Listener{
+        val recordAdapter = RecordAdapter(mutableListOf())
+        recordAdapter.setOnTapListener(object: RecordAdapter.Listener{
             override fun onTap(item: RecordEntity) {
                 println(item.date)
             }
         })
 
         binding.rvRecords.apply {
-            adapter = a
+            adapter = recordAdapter
             layoutManager = LinearLayoutManager(requireActivity())
         }
+
+        val otherCurrencyAdapter = OtherCurrenciesAdapter(mutableListOf())
+        binding.rvOtherCurrencies.apply {
+            adapter = otherCurrencyAdapter
+            layoutManager = LinearLayoutManager(requireActivity())
+        }
+
     }
 
     fun setUpObservers() {
