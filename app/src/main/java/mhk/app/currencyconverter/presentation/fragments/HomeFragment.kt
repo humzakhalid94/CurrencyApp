@@ -1,12 +1,16 @@
 package mhk.app.currencyconverter.presentation.fragments
 
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import dagger.hilt.android.AndroidEntryPoint
@@ -17,6 +21,7 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import mhk.app.currencyconverter.presentation.extension.gone
+import mhk.app.currencyconverter.presentation.extension.roundOffDecimal
 import mhk.app.currencyconverter.presentation.extension.showToast
 import mhk.app.currencyconverter.presentation.extension.visible
 
@@ -55,7 +60,7 @@ class HomeFragment : Fragment() {
                 return@setOnClickListener
             }
 
-            val from = viewModel.selectedFrom
+            val from = viewModel.selectedFrom?.value
             val to = viewModel.selectedTo
 
             binding.tvFromCountry.text = to
@@ -70,8 +75,8 @@ class HomeFragment : Fragment() {
             MaterialAlertDialogBuilder(requireActivity())
                 .setTitle(resources.getString(R.string.select_from))
                 .setItems(currencies) { dialog, which ->
-                    viewModel.selectedFrom = currencies.get(which)
-                    binding.tvFromCountry.text = viewModel.selectedFrom
+                    viewModel.selectedFrom?.value = currencies.get(which)
+                    binding.tvFromCountry.text = viewModel.selectedFrom?.value
                 }
                 .show()
         }
@@ -92,6 +97,16 @@ class HomeFragment : Fragment() {
 
     fun setUpObservers() {
 
+        viewModel.conversionAmount.observe(viewLifecycleOwner, Observer {
+            binding.etTo.setText("${it.roundOffDecimal()}")
+        })
+
+        viewModel.selectedFrom.observe(viewLifecycleOwner, {
+            it?.let {
+                viewModel.getBaseCurrency(it)
+            }
+        })
+
         viewModel.mCurrencies
             .flowWithLifecycle(viewLifecycleOwner.lifecycle, Lifecycle.State.STARTED)
             .onEach { currency ->
@@ -99,6 +114,12 @@ class HomeFragment : Fragment() {
             }
             .launchIn(viewLifecycleOwner.lifecycleScope)
 
+        viewModel.mBaseCurrency
+            .flowWithLifecycle(viewLifecycleOwner.lifecycle, Lifecycle.State.STARTED)
+            .onEach { currency ->
+                performCalculation(binding.etFrom.text)
+            }
+            .launchIn(viewLifecycleOwner.lifecycleScope)
 
         viewModel.mState
             .flowWithLifecycle(viewLifecycleOwner.lifecycle,  Lifecycle.State.STARTED)
@@ -107,6 +128,8 @@ class HomeFragment : Fragment() {
             }
             .launchIn(viewLifecycleOwner.lifecycleScope)
 
+
+        binding.etFrom.addTextChangedListener(amountWatcher)
 
     }
 
@@ -127,5 +150,32 @@ class HomeFragment : Fragment() {
             binding.loadingProgressBar.gone()
         }
     }
+
+    var amountWatcher: TextWatcher = object : TextWatcher {
+        override fun beforeTextChanged(charSequence: CharSequence, i: Int, i1: Int, i2: Int) {}
+        override fun onTextChanged(charSequence: CharSequence, i: Int, i1: Int, i2: Int) {
+            performCalculation(charSequence)
+
+        }
+
+        override fun afterTextChanged(editable: Editable) {}
+    }
+
+    private fun performCalculation(charSequence: CharSequence) {
+        val input = charSequence.toString()
+
+        if (input.isEmpty()) {
+            binding.etTo.setText("")
+            return
+        }
+
+        val amount = input.toIntOrNull()
+
+        amount?.let {
+            viewModel.performConversion(it)
+        }
+
+    }
+
 
 }
