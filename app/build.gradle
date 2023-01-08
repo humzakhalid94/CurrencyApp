@@ -3,6 +3,7 @@ plugins {
     id 'kotlin-android'
 //    id 'dagger.hilt.android.plugin'
     id 'kotlin-kapt'
+    id 'dagger.hilt.android.plugin'
 }
 
 android {
@@ -67,7 +68,7 @@ dependencies {
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.4.1'
 
     // Coroutine Lifecycle Scopes
-    def lifeCycle = "2.3.1"
+    def lifeCycle = "2.4.0-alpha02" //"2.3.1"
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifeCycle"
     implementation "androidx.lifecycle:lifecycle-runtime-ktx:$lifeCycle"
 

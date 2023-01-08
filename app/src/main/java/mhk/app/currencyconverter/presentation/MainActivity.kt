@@ -2,10 +2,11 @@ package mhk.app.currencyconverter.presentation
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import dagger.hilt.android.AndroidEntryPoint
 import mhk.app.currencyconverter.R
 import mhk.app.currencyconverter.databinding.ActivityMainBinding
 
-
+@AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
